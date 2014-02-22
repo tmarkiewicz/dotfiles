@@ -7,11 +7,21 @@ parse_git_branch() {
 }
 PS1="\w\$(parse_git_branch) $ "
 
+# cd to the path of the front Finder window
+# via http://brettterpstra.com/2013/02/09/quick-tip-jumping-to-the-finder-location-in-terminal/
+cdf() {
+  target=`osascript -e 'tell application "Finder" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)'`
+  if [ "$target" != "" ]; then
+    cd "$target"; pwd
+  else
+    echo 'No Finder window found' >&2
+  fi
+}
+
 # General aliases
 alias cd..='cd ..'
 alias l='ls -l'
-# alias ebash='subl ~/.bash_profile &'
-alias ebash='mate ~/.bash_profile &'
+alias ebash='subl ~/.bash_profile &'
 alias reload_bash='source ~/.bash_profile'
 alias bash_reload='source ~/.bash_profile'
 alias systail='tail -f /var/log/system.log'
@@ -36,12 +46,12 @@ alias chrome="open -a google\ chrome"
 alias github="open -a firefox http://www.github.com"
 alias mc="memcached -vv"
 alias log="~/scripts/logtodayone.rb"
-alias f='open -a Finder'
+# alias f='open -a Finder'
+alias f='open -a Finder ./' # open current dir in Finder
 
 # Rails aliases
-alias ss='script/server'
-alias ssb='script/server webrick'
-alias sc='script/console'
+alias rc='rails console'
+alias rs='rails server'
 alias rtp='rake db:test:prepare'
 alias a='autotest -rails' # makes autotesting quicker
 alias rt='rake test'
@@ -53,22 +63,21 @@ alias tlog='tail -f log/development.log'
 alias rtar='sh test_all_rubies.sh'
 alias rdbm='rake db:migrate'
 function rails-help() {
-  	echo "Rails Aliases Usage"
-  	echo
-  	echo " ss   = script/server"
-  	echo " ssb  = script/server webrick"
-  	echo " sc   = script/console"
-  	echo " rtp  = rake db:test:prepare"
-  	echo " a    = autotest -rails"
-  	echo " rt   = rake test"
-  	echo " rtu  = rake test:units"
-  	echo " rtf  = rake test:functionals"
-  	echo " rti  = rake test:integration"
-  	echo " rst  = rake stats"
-  	echo " tlog = tail -f log/development.log"
-  	echo " rtar = sh test_all_rubies.sh"
-	  echo " rdbm = rake db:migrate"
-  	echo
+	echo "Rails Aliases Usage"
+	echo
+	echo " rs   = rails server"
+	echo " rc   = rails console"
+	echo " rtp  = rake db:test:prepare"
+	echo " a    = autotest -rails"
+	echo " rt   = rake test"
+	echo " rtu  = rake test:units"
+	echo " rtf  = rake test:functionals"
+	echo " rti  = rake test:integration"
+	echo " rst  = rake stats"
+	echo " tlog = tail -f log/development.log"
+	echo " rtar = sh test_all_rubies.sh"
+  echo " rdbm = rake db:migrate"
+	echo
 }
 function server() {
   	# local port="${1:-8000}"
@@ -85,16 +94,16 @@ alias gb='git branch'
 alias gc='git commit'
 alias gpull='git pull origin master'
 function git-help() {
-    echo "Git Custom Aliases Usage"
-  	echo
-  	echo " ga    = git add"
-  	echo " gl    = git log"
-	echo " gp    = git push"
-	echo " gs    = git status"
-  	echo " gpull = git pull origin master"
-  	echo " gc    = git commit"
-  	echo " gb    = git branch"
-  	echo
+  echo "Git Custom Aliases Usage"
+  echo
+  echo " ga    = git add"
+  echo " gl    = git log"
+  echo " gp    = git push"
+  echo " gs    = git status"
+  echo " gpull = git pull origin master"
+  echo " gc    = git commit"
+  echo " gb    = git branch"
+  echo
 }
 
 # Heroku aliases
@@ -150,25 +159,12 @@ function heroku-help() {
 # Directories / navigation aliases
 alias rw='cd /usr/local/work'
 alias rwi='cd /usr/local/work/investify'
-alias rwc='cd /usr/local/work/climbingvibe'
-alias rwt='cd /usr/local/work/thinkclimbing'
 alias rws='cd /usr/local/work/statsapp'
-alias rwg='cd /usr/local/work/gems/statsmix'
-alias rww='cd /usr/local/work/wagersapp'
-alias rwa='cd /usr/local/work/alertsapp'
 alias wp='cd /applications/mamp/htdocs'
-alias rwm='cd /usr/local/work/statsmix-marketing/maxi-template/template-files'
 alias rm='rm -i'
-#alias sshi='ssh -p 30000 tmarkiewicz@67.207.129.76' # Slicehost server
-alias sshs='ssh -p 30000 deploy@173.203.59.239' # Rackspace server - statsmix-app
-alias ssh_api="ssh -p 30000 deploy@50.56.77.101" # Rackspace server - statsmix-api
-alias sshd3='ssh -p 30000 deploy@184.106.174.13' # Rackspace server - statsmix-db-server-3 (master)
-alias sshd5='ssh -p 30000 deploy@184.106.177.134' # Rackspace server - statsmix-db-server-5 (slave)
 
-alias ssha_old="ssh -p 30000 deploy@50.56.35.61" # Rackspace server - arrakis - personal projects
-alias ssha="ssh -p 30000 deploy@69.55.59.184" # Digital Ocean server - arrakis - personal projects
-
-alias ssh_dev="ssh -p 30000 deploy@184.106.174.172" # Rackspace server - statsmix-dev
+# Servers
+alias ssha="ssh -p 30000 deploy@69.55.59.184" # Digital Ocean - arrakis - personal projects
 
 # MySQL aliases
 # alias start_mysql='sudo mysqld_safe'
@@ -178,13 +174,17 @@ alias tunnel_mysql='ssh -p 30000 -fNg -L 8888:127.0.0.1:3306 tmarkiewicz@67.207.
 # PostgreSQL
 alias start_pg='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
 alias stop_pg='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
+alias psql="psql -h localhost"
 
+# MySQL
 # http://hivelogic.com/articles/compiling-mysql-on-snow-leopard
 alias start_mysql='sudo launchctl load -w /Library/LaunchDaemons/com.mysql.mysqld.plist'
 alias stop_mysql='sudo launchctl unload -w /Library/LaunchDaemons/com.mysql.mysqld.plist'
 
+# Cassandra
 alias start_cassandra='cassandra_helper cassandra'
 
+# Apache
 alias restart_apache='sudo /usr/sbin/apachectl restart'
 alias edit_apache='sudo nano /etc/apache2/httpd.conf'
 
@@ -207,3 +207,12 @@ export EDITOR='nano'
 export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:$PATH"
 
 [[ -s "/Users/tmarkiewicz/.rvm/scripts/rvm" ]] && source "/Users/tmarkiewicz/.rvm/scripts/rvm" # This loads RVM into a shell session.
+
+export PATH="/Users/tmarkiewicz/scripts:/usr/local/work/ofexport:$PATH"
+export OFEXPORT_HOME="/usr/local/work/ofexport"
+export PATH=$PATH:"$OFEXPORT_HOME/bin"
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+# export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
