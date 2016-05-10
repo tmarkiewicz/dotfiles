@@ -126,6 +126,7 @@ alias pms="sudo passenger-memory-stats"
 alias pss="sudo passenger-status"
 alias view_logs="sudo nano /var/log/syslog"
 
+# Apache
 alias reload_apache="sudo /etc/init.d/apache2 reload"
 alias restart_apache="sudo /etc/init.d/apache2 restart"
 # asks apache to restart, but to do it in a way that won't interfere with existing connections
@@ -134,9 +135,24 @@ alias edit_apache="sudo nano /etc/apache2/apache2.conf"
 alias configtest="sudo /usr/sbin/apache2ctl configtest"
 alias apache_error_log="sudo nano /var/log/apache2/error.log"
 
+# Nginx
+alias edit_nginx="sudo nano /etc/nginx/nginx.conf"
+alias restart_nginx="sudo service nginx restart"
+
+# Monit
+alias edit_monit="sudo nano /etc/monit/monitrc"
+
+# Delayed Job
+alias start_delayed_job="RAILS_ENV=production bin/delayed_job -n 5 start"
+alias stop_delayed_job="RAILS_ENV=production bin/delayed_job stop"
+
 alias restart_investify="touch /home/deploy/apps/investify/current/tmp/restart.txt"
 
 alias rwi="cd /home/deploy/apps/investify/current"
+
+alias tail_log="cd /home/deploy/apps/investify/current/log && tail -f production.log"
+
+alias rc="rails console -e production"
 
 alias pbcopy='xsel --clipboard'
 alias pbpaste='xsel --clipboard'
