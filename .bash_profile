@@ -164,12 +164,12 @@ alias wp='cd /applications/mamp/htdocs'
 alias rm='rm -i'
 
 # Servers
-alias ssha="ssh -p 30000 deploy@69.55.59.184" # Digital Ocean - arrakis - personal projects
+alias ssha="ssh -p xxx user@xx.xx.xx.xx" # Digital Ocean - arrakis - personal projects
 
 # MySQL aliases
 # alias start_mysql='sudo mysqld_safe'
 # alias stop_mysql='sudo mysqladmin shutdown'
-alias tunnel_mysql='ssh -p 30000 -fNg -L 8888:127.0.0.1:3306 tmarkiewicz@67.207.129.76'
+alias tunnel_mysql='ssh -p xxx -fNg -L 8888:127.0.0.1:3306 user@xx.xxx.xxx.xx'
 
 # PostgreSQL
 alias start_pg='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
